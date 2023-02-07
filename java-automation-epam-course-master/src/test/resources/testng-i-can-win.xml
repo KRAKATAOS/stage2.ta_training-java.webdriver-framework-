@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="All Test Suite">
+    <test verbose="2" preserve-order="true"
+          name="C:/Users/Admin/learning/src/test/java/training/stage2/webdriver/i_can_win/WebDriverTest.java">
+        <classes>
+            <class name="training.stage2.webdriver.i_can_win.WebDriverTest">
+                <methods>
+                    <include name="scenarioTest"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+</suite>
