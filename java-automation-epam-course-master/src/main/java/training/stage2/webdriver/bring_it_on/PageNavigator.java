@@ -48,7 +48,7 @@ public class PageNavigator extends AbstractPage {
         return CODE_FIELD_TEXT;
     }
 
-    public static final String getSYNTAX() {
+    public static String getSYNTAX() {
         return SYNTAX;
     }
 
@@ -61,7 +61,7 @@ public class PageNavigator extends AbstractPage {
 
         driver.get(HOMEPAGE_URL);
 
-        new WebDriverWait(driver, 10).until(CustomConditions.jQueryAJAXCompleted());
+        new WebDriverWait(driver, 5).until(CustomConditions.jQueryAJAXCompleted());
 
         return this;
     }

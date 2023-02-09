@@ -33,7 +33,7 @@ public class WebDriverTest {
         Assert.assertTrue(testPage.checkSyntaxHighlight(), driver.toString() + ": FAIL:The highlight of syntax is not correct");
         Assert.assertTrue(testPage.checkTitle(), driver.toString() + ": FAIL:The text of title does not incorporate");
     }
-    
+
 
     @AfterMethod(alwaysRun = true)
     public void afterTestCompleted() {
