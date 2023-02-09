@@ -33,12 +33,7 @@ public class WebDriverTest {
         Assert.assertTrue(testPage.checkSyntaxHighlight(), driver.toString() + ": FAIL:The highlight of syntax is not correct");
         Assert.assertTrue(testPage.checkTitle(), driver.toString() + ": FAIL:The text of title does not incorporate");
     }
-
-    @BeforeMethod(alwaysRun = true)
-    public void browserSetup() {
-        System.setProperty("webdriver.chrome.driver","C:/WebDriver/chromedriver.exe");
-        chromeDriver = new ChromeDriver();
-    }
+    
 
     @AfterMethod(alwaysRun = true)
     public void afterTestCompleted() {

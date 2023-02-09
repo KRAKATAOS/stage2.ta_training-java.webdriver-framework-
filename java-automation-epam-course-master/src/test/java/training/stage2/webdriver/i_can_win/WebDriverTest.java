@@ -24,11 +24,6 @@ public class WebDriverTest {
         chromeDriver = StartScenarioOnBrowser(new ChromeDriver());
 
     }
-    @BeforeMethod(alwaysRun = true)
-    public void browserSetup() {
-        System.setProperty("webdriver.chrome.driver","C:/WebDriver/chromedriver.exe");
-         chromeDriver = new ChromeDriver();
-    }
 
     @AfterMethod(alwaysRun = true)
     public void afterTestCompleted() {
