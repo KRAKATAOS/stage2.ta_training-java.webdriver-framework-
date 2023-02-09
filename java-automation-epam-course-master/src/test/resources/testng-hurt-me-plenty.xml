@@ -2,9 +2,9 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite name="All Test Suite">
     <test verbose="2" preserve-order="true"
-          name="C:/Users/Admin/learning/src/test/java/training/stage2/framework/test/WebDriverTest.java">
+          name="C:/Users/Admin/learning/src/test/java/training/stage2/webdriver/hurt_me_plenty/WebDriverTest.java">
         <classes>
-            <class name="training.stage2.framework.test.WebDriverTest">
+            <class name="training.stage2.webdriver.hurt_me_plenty.WebDriverTest">
                 <methods>
                     <include name="scenarioTest"/>
                 </methods>
