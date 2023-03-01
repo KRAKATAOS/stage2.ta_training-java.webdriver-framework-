@@ -3,16 +3,16 @@ package training.stage2.framework.model;
 import java.util.Objects;
 
 public class TestingSet {
-    private String form_number_of_instance;
-    private String form_os_type;
-    private String form_class_type;
-    private String form_instance_series;
-    private String form_instance_type;
-    private String form_gpu_number;
-    private String form_gpu_type;
-    private String form_ssd_capacity;
-    private String form_location;
-    private String form_usage;
+    private final String form_number_of_instance;
+    private final String form_os_type;
+    private final String form_class_type;
+    private final String form_instance_series;
+    private final String form_instance_type;
+    private final String form_gpu_number;
+    private final String form_gpu_type;
+    private final String form_ssd_capacity;
+    private final String form_location;
+    private final String form_usage;
 
     public TestingSet(String form_number_of_instance,
                       String form_os_type,
@@ -36,43 +36,43 @@ public class TestingSet {
         this.form_usage = form_usage;
     }
 
-    public String getFormNumberOfInstance() {
+    public  String getFormNumberOfInstance() {
         return form_number_of_instance;
     }
 
-    public String getFormOsType() {
+    public  String getFormOsType() {
         return form_os_type;
     }
 
-    public String getFormClassType() {
+    public  String getFormClassType() {
         return form_class_type;
     }
 
-    public String getFormInstanceSeries() {
+    public  String getFormInstanceSeries() {
         return form_instance_series;
     }
 
-    public String getFormInstanceType() {
+    public  String getFormInstanceType() {
         return form_instance_type;
     }
 
-    public String getFormGpuNumber() {
+    public  String getFormGpuNumber() {
         return form_gpu_number;
     }
 
-    public String getFormGpuType() {
+    public  String getFormGpuType() {
         return form_gpu_type;
     }
 
-    public String getFormSsdCapacity() {
+    public  String getFormSsdCapacity() {
         return form_ssd_capacity;
     }
 
-    public String getFormLocation() {
+    public  String getFormLocation() {
         return form_location;
     }
 
-    public String getFormUsage() {
+    public  String getFormUsage() {
         return form_usage;
     }
 

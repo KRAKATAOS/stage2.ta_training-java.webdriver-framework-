@@ -2,11 +2,11 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite name="All Test Suite">
     <test verbose="2" preserve-order="true"
-          name="C:/Users/Admin/learning/src/test/java/training/stage2/webdriver/bring_it_on/WebDriverTest.java">
+          name="C:/Users/Admin/learning/src/test/java/training/stage2/webdriver/bring_it_on/TestPastebinFieldFillerAndChecker.java">
         <classes>
-            <class name="training.stage2.webdriver.bring_it_on.WebDriverTest">
+            <class name="training.stage2.webdriver.bring_it_on.TestPastebinFieldFillerAndChecker">
                 <methods>
-                    <include name="scenarioTest"/>
+                    <include name="fillingInTheSiteFields"/>
                 </methods>
             </class>
         </classes>

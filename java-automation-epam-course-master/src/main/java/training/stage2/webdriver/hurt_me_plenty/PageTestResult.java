@@ -3,74 +3,57 @@ package training.stage2.webdriver.hurt_me_plenty;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
 
-import java.util.List;
+import java.util.Arrays;
+
 
 
 public class PageTestResult extends AbstractPage {
 
-    private Boolean result;
+    @FindBy(xpath = "//*[@id='compute']/md-list/md-list-item[1]")
+    private WebElement regionDataCenter ;
+
+    @FindBy(xpath = "//*[@id='compute']/md-list/md-list-item[4]")
+    private WebElement formClassType ;
+
+    @FindBy(xpath = " //*[@id='compute']/md-list/md-list-item[5]/div[1]")
+    private WebElement formInstanceType ;
+
+    @FindBy(xpath = " //*[@id='compute']/md-list/md-list-item[3]")
+    private WebElement formUsage ;
+
+    @FindBy(xpath = " //*[@id='compute']/md-list/md-list-item[8]/div[1]")
+    private WebElement formSSD ;
 
     public PageTestResult(WebDriver driver) {
         super(driver);
     }
 
-//    public Boolean checkVMClass() {
-//        String classType = PageNavigator.getFormClassType().toLowerCase();
-//        checkResult(classType);
-//        return result;
-//    }
-    public Boolean checkVMClass() {
-        String[] instance = PageNavigator.getFormClassType().split(" ");
-        System.out.println("Provisioning model: " + instance[0]);
-        checkResult(instance[0]);
-        return result;
+    public String  checkVMClass() {
+        String[] VMClass= formClassType.getText().split(" ");
+        return VMClass[2];
     }
 
-
-    public Boolean checkInstanceType() {
-        String[] instance = PageNavigator.getFormInstanceType().split(" ");
-        System.out.println("Instance type: " + instance[0]);
-        checkResult(instance[0]);
-        return result;
+    public String checkInstanceType() {
+        String[] instance = formInstanceType.getText().split(" ");
+        return instance[2].substring(0,13).trim();
     }
 
-    public Boolean checkRegion() {
-        String[] region = PageNavigator.getFormLocation().split(" ");
-        System.out.println("Region: " + region[0]);
-        checkResult(region[0]);
-        return result;
+    public String  checkRegion() {
+        String[] region = regionDataCenter.getText().split(" ");
+        return region[1];
     }
 
-    public Boolean checkSSD() {
-        String[] capacity = PageNavigator.getFormSsdCapacity().split(" ");
-        System.out.println("capacity: " + capacity[0]);
-        checkResult(capacity[0]);
-        return result;
+    public String checkSSD() {
+        String[] capacity = formSSD.getText().split(":");
+        capacity = capacity[1].split(" ");
+        return capacity[1].trim();
     }
 
-    public Boolean checkUsage() {
-        checkResult(PageNavigator.getFormUsage());
-        return result;
+    public String checkUsage() {
+        String[] usage = formUsage.getText().split(":");
+        return usage[1].trim();
     }
 
-    private void checkResult(String textToCompare) {
-
-        List<WebElement> listOfWebElement = driver.findElements(By.xpath("//*[@class='md-list-item-text ng-binding']"));
-
-        for (WebElement list : listOfWebElement) {
-            if (list.getText().contains(textToCompare)) {
-                System.out.println("PASSED: [" + list.getText() + "] contains: " + textToCompare);
-                result = true;
-                return;
-            }
-        }
-        result = false;
-        return;
-    }
-
-    @Override
-    protected AbstractPage openPage() {
-        return null;
-    }
 }

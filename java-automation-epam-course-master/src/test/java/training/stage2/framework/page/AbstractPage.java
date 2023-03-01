@@ -11,6 +11,4 @@ public abstract class AbstractPage {
         this.driver = driver;
         PageFactory.initElements(driver, this);
     }
-
-    protected abstract AbstractPage openPage();
 }

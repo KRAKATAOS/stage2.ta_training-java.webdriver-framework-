@@ -8,12 +8,6 @@ public class CustomConditions {
 
 
     public static ExpectedCondition<Boolean> pageLoadCompleted() {
-        return new ExpectedCondition<Boolean>() {
-
-            @Override
-            public Boolean apply(WebDriver driver) {
-                return ((JavascriptExecutor) driver).executeScript("return document.readyState").equals("complete");
-            }
-        };
+        return driver -> ((JavascriptExecutor) driver).executeScript("return document.readyState").equals("complete");
     }
 }

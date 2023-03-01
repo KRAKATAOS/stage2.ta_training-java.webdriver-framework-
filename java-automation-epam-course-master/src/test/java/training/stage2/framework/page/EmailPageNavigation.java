@@ -9,13 +9,14 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import training.stage2.framework.util.CustomConditions;
+import training.stage2.webdriver.hardcore.CustomConditions;
+
 
 import java.util.ArrayList;
 
-public class EmailPageNavigator extends AbstractPage {
+public class EmailPageNavigation extends AbstractPage {
 
-    static String costValueFromEmail;
+    public static String costValueFromEmail;
     private final Logger logger = LogManager.getRootLogger();
     String emailName;
     String estimatedCost;
@@ -40,20 +41,20 @@ public class EmailPageNavigator extends AbstractPage {
     @FindBy(xpath = "//*//h2")
     private WebElement emailBody;
 
-    protected EmailPageNavigator(WebDriver driver, String urlName) {
+    protected EmailPageNavigation(WebDriver driver, String urlName) {
         super(driver);
         this.urlName = urlName;
     }
 
-    protected EmailPageNavigator(WebDriver driver, String estimatedCost, String emailName) {
+    protected EmailPageNavigation(WebDriver driver, String estimatedCost, String emailName) {
         super(driver);
         this.emailName = emailName;
         this.estimatedCost = estimatedCost;
         costValueFromEmail = getCostValueFromEmail();
     }
 
-    private String getCostValueFromEmail() {
-        new WebDriverWait(driver, 20).until(ExpectedConditions.visibilityOf(xpathCheckMailButton));
+    public String getCostValueFromEmail() {
+        new WebDriverWait(driver, 10).until(ExpectedConditions.visibilityOf(xpathCheckMailButton));
         xpathCheckMailButton.click();
         xpathCheckRefreshButton.click();
 
@@ -63,34 +64,26 @@ public class EmailPageNavigator extends AbstractPage {
         bodyText = emailBody.getText().split(":");
         bodyText = bodyText[1].split(" ");
         costValueFromEmail = bodyText[2];
+
         return costValueFromEmail;
     }
 
-    public HomePageNavigator openEmailSiteAndTakeEmailName() {
+    public GooglePageNavigation openEmailSiteAndTakeEmailName() {
         ((JavascriptExecutor) driver).executeScript("window.open();");
         ArrayList<String> tabs = new ArrayList<>(driver.getWindowHandles());
 
         driver.switchTo().window(tabs.get(1));
         driver.get(urlName);
+
         new WebDriverWait(driver, 10).until(CustomConditions.pageLoadCompleted());
 
         xpathForARandomAddress.click();
         logger.info("Email generator site opened");
 
         emailName = xpathEmailNameField.getText();
-
         logger.info("Email has been generated");
 
         driver.switchTo().window(tabs.get(0));
-        return new HomePageNavigator(driver, emailName, tabs);
-    }
-
-    public PageTestResult verifyCostInEmail() {
-        return new PageTestResult(driver, estimatedCost, costValueFromEmail);
-    }
-
-    @Override
-    protected AbstractPage openPage() {
-        return null;
+        return new GooglePageNavigation(driver, emailName, tabs);
     }
 }

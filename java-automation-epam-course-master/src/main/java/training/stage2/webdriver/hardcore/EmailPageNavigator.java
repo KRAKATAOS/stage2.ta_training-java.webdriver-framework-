@@ -9,11 +9,10 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class EmailPageNavigator extends AbstractPage {
 
-    static String costValueFromEmail;
+    public static String costValueFromEmail;
     String emailName;
     String estimatedCost;
     String[] bodyText;
@@ -49,7 +48,7 @@ public class EmailPageNavigator extends AbstractPage {
         costValueFromEmail = getCostValueFromEmail();
     }
 
-    private String getCostValueFromEmail() {
+    public String getCostValueFromEmail() {
         new WebDriverWait(driver, 10).until(ExpectedConditions.visibilityOf(xpathCheckMailButton));
         xpathCheckMailButton.click();
         xpathCheckRefreshButton.click();
@@ -60,8 +59,6 @@ public class EmailPageNavigator extends AbstractPage {
         bodyText = emailBody.getText().split(":");
         bodyText = bodyText[1].split(" ");
         costValueFromEmail = bodyText[2];
-
-        System.out.println("Cost value from Email: " + costValueFromEmail);
 
         return costValueFromEmail;
     }
@@ -81,14 +78,5 @@ public class EmailPageNavigator extends AbstractPage {
 
         driver.switchTo().window(tabs.get(0));
         return new HomePageNavigator(driver, emailName, tabs);
-    }
-
-    public PageTestResult verifyCostInEmail() {
-        return new PageTestResult(driver, estimatedCost, costValueFromEmail);
-    }
-
-    @Override
-    protected AbstractPage openPage() {
-        return null;
     }
 }

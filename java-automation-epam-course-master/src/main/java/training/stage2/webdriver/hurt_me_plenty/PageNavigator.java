@@ -12,22 +12,6 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.util.concurrent.TimeUnit;
 
 public class PageNavigator extends AbstractPage {
-
-    private static final String HOMEPAGE_URL = "https://cloud.google.com/";
-    private static final String SEARCH_REQUEST = "Google Cloud Platform Pricing Calculator";
-
-    private static final String FORM_NUMBER_OF_INSTANCE = "4";
-    private static final String FORM_OS_TYPE = "Free: Debian, CentOS, CoreOS, Ubuntu or BYOL (Bring Your Own License)";
-    private static final String FORM_CLASS_TYPE = "Regular";
-    private static final String FORM_INSTANCE_SERIES = "N1";
-    private static final String FORM_INSTANCE_TYPE = "n1-standard-8 (vCPUs: 8, RAM: 30GB)";
-    private static final String FORM_INSTANCE_TYPE_IN_A_BILL = "n1-standard-8";
-    private static final String FORM_GPU_NUMBER = "1";
-    private static final String FORM_GPU_TYPE = "NVIDIA Tesla P100";
-    private static final String FORM_SSD_CAPACITY = "2x375 GB";
-    private static final String FORM_SSD_CAPACITY_IN_A_BILL = "2x375 GiB";
-    private static final String FORM_LOCATION = "Frankfurt (europe-west3)";
-    private static final String FORM_USAGE = "1 Year";
     Actions actions = new Actions(driver);
 
     @FindBy(xpath = "//*[@class='devsite-search-field devsite-search-query']")
@@ -42,10 +26,10 @@ public class PageNavigator extends AbstractPage {
     @FindBy(xpath = "//md-input-container//label[contains(text(),'Number of instances')]/../input")
     private WebElement inputFieldNumberOfInstances;
 
-    @FindBy(xpath = "//*[@id='select_value_label_90']/span[1]")
+    @FindBy(xpath = "//*[@id='select_value_label_91']/span[1]")
     private WebElement fieldOfDataCenter;
 
-    @FindBy(xpath = "//*[@id='select_option_230']")
+    @FindBy(xpath = "//*[@id='select_option_231']")
     private WebElement checkBoxOfDataCenter;
 
     @FindBy(xpath = "//*[@ng-model='listingCtrl.computeServer.addGPUs']//*[@class='md-container md-ink-ripple']")
@@ -61,70 +45,29 @@ public class PageNavigator extends AbstractPage {
         super(driver);
     }
 
-    public static String getFormClassType() {
-        return FORM_CLASS_TYPE;
-    }
-
-    public static String getFormInstanceType() {
-        return FORM_INSTANCE_TYPE_IN_A_BILL;
-    }
-
-    public static String getFormSsdCapacity() {
-        return FORM_SSD_CAPACITY_IN_A_BILL;
-    }
-
-    public static String getFormLocation() {
-        return FORM_LOCATION;
-    }
-
-    public static String getFormUsage() {
-        return FORM_USAGE;
-    }
-
-    public PageNavigator openPage() {
+    public PageNavigator openPage(String cloudGoogleUrl) {
         driver.manage().window().maximize();
-        driver.get(HOMEPAGE_URL);
+        driver.get(cloudGoogleUrl);
         return this;
 
     }
 
-    public PageNavigator searchForElementAndClick() {
+    public PageNavigator searchElementAndClick(String sendRequestInCloudGoogle) {
         new WebDriverWait(driver, 10).until(ExpectedConditions.visibilityOf(searchButton));
         searchButton.click();
-        searchButton.sendKeys(SEARCH_REQUEST);
+        searchButton.sendKeys(sendRequestInCloudGoogle);
         searchButton.sendKeys(Keys.RETURN);
 
         new WebDriverWait(driver, 10).until(ExpectedConditions.visibilityOf(searchResultField));
-        searchResultField.findElement(By.linkText(SEARCH_REQUEST)).click();
+        searchResultField.findElement(By.linkText(sendRequestInCloudGoogle)).click();
 
         return this;
     }
 
-    public PageNavigator fillSiteForm() {
+    public PageNavigator changeTheFrameBeforeFillingInTheFields() {
 
         driver.switchTo().frame(driver.findElement(By.xpath("//*[@id='cloud-site']//iframe")));
         driver.switchTo().frame(driver.findElement(By.xpath("//iframe[@id='myFrame']")));
-
-        inputFieldHandling(inputFieldNumberOfInstances);
-
-        spanOptionHandling("Operating System / Software", FORM_OS_TYPE);
-        spanOptionHandling("Provisioning model", FORM_CLASS_TYPE);
-        spanOptionHandling("Series", FORM_INSTANCE_SERIES);
-        spanOptionHandling("Machine type", FORM_INSTANCE_TYPE);
-
-        checkBoxHandling(checkBoxAddGPUs);
-
-        spanOptionHandling("GPU type", FORM_GPU_TYPE);
-        spanOptionHandling("Number of GPUs", FORM_GPU_NUMBER);
-
-
-        scrollDownTillElementAppeared(localSSD);
-
-        spanOptionHandling("Local SSD", FORM_SSD_CAPACITY);
-        spanOptionHandling("Committed usage", FORM_USAGE);
-        fieldOfDataCenter(fieldOfDataCenter);
-        checkBoxOfDataCenter(checkBoxOfDataCenter);
-
         return this;
     }
 
@@ -132,15 +75,16 @@ public class PageNavigator extends AbstractPage {
         buttonAddToEstimate.click();
     }
 
-    private void checkBoxHandling(WebElement checkBoxField) {
-        new WebDriverWait(driver, 10).until(ExpectedConditions.visibilityOf(checkBoxField));
-        checkBoxField.click();
+    public PageNavigator clickTheAddGPUButton() {
+        new WebDriverWait(driver, 10).until(ExpectedConditions.visibilityOf(checkBoxAddGPUs));
+        checkBoxAddGPUs.click();
 
         driver.manage().timeouts().implicitlyWait(200, TimeUnit.MILLISECONDS);
+        return this;
     }
 
 
-    private void spanOptionHandling(String optionDescription, String textOption) {
+    public PageNavigator spanOptionHandling(String optionDescription, String textOption) {
 
         new WebDriverWait(driver, 10).until(ExpectedConditions.presenceOfElementLocated(By.xpath("*//label[text()='" + optionDescription + "']/../md-select")));
         driver.findElement(By.xpath("*//label[text()='" + optionDescription + "']/../md-select")).click();
@@ -149,30 +93,42 @@ public class PageNavigator extends AbstractPage {
         driver.findElement(By.xpath("*//*[@class='md-select-menu-container md-active md-clickable']//.//*[contains(text(),'" + textOption + "')]")).click();
 
         driver.manage().timeouts().implicitlyWait(200, TimeUnit.MILLISECONDS);
+        return this;
+    }
+    public PageNavigator spanOptionHandlingForDatacenter(String optionDescription, String textOption) {
+
+        new WebDriverWait(driver, 10).until(ExpectedConditions.presenceOfElementLocated(By.xpath("*//label[text()='" + optionDescription + "']/../md-select")));
+        driver.findElement(By.xpath("*//label[text()='" + optionDescription + "']/../md-select")).click();
+
+        new WebDriverWait(driver, 10).until(ExpectedConditions.presenceOfElementLocated(By.xpath("*//*[@class='md-select-menu-container cpc-region-select md-active md-clickable']//.//*[contains(text(),'" + textOption + "')]")));
+        driver.findElement(By.xpath("*//*[@class='md-select-menu-container cpc-region-select md-active md-clickable']//.//*[contains(text(),'" + textOption + "')]")).click();
+
+        driver.manage().timeouts().implicitlyWait(200, TimeUnit.MILLISECONDS);
+        return this;
     }
 
-    private void inputFieldHandling(WebElement fieldXpath) {
-        new WebDriverWait(driver, 10).until(ExpectedConditions.visibilityOf(fieldXpath));
-        fieldXpath.sendKeys(PageNavigator.FORM_NUMBER_OF_INSTANCE);
+    public PageNavigator inputFieldHandling(String handlingField ) {
+        new WebDriverWait(driver, 10).until(ExpectedConditions.visibilityOf(inputFieldNumberOfInstances));
+        inputFieldNumberOfInstances.sendKeys(handlingField);
 
         driver.manage().timeouts().implicitlyWait(100, TimeUnit.MILLISECONDS);
-    }
-    private void fieldOfDataCenter(WebElement fieldXpath) {
-        new WebDriverWait(driver, 10).until(ExpectedConditions.visibilityOf(fieldXpath));
-        fieldXpath.click();
-
-        driver.manage().timeouts().implicitlyWait(100, TimeUnit.MILLISECONDS);
-    }
-    private void checkBoxOfDataCenter(WebElement fieldXpath) {
-        new WebDriverWait(driver, 10).until(ExpectedConditions.visibilityOf(fieldXpath));
-        fieldXpath.click();
-
-        driver.manage().timeouts().implicitlyWait(100, TimeUnit.MILLISECONDS);
+        return this;
     }
 
-    private void scrollDownTillElementAppeared(WebElement optionDescription) {
-        while (!optionDescription.isDisplayed()) {
+//    public PageNavigator fillFieldOfDataCenter() {
+//        new WebDriverWait(driver, 10).until(ExpectedConditions.visibilityOf(fieldOfDataCenter));
+//        fieldOfDataCenter.click();
+//        new WebDriverWait(driver, 10).until(ExpectedConditions.visibilityOf(checkBoxOfDataCenter));
+//        checkBoxOfDataCenter.click();
+//
+//        driver.manage().timeouts().implicitlyWait(100, TimeUnit.MILLISECONDS);
+//        return this;
+//    }
+
+    public PageNavigator scrollDownTillElementAppeared() {
+        while (!localSSD.isDisplayed()) {
             new Actions(driver).sendKeys(Keys.DOWN);
         }
+        return this;
     }
 }

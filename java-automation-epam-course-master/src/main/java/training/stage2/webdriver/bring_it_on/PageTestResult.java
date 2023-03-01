@@ -8,8 +8,6 @@ import org.openqa.selenium.support.FindBy;
 
 public class PageTestResult extends AbstractPage {
 
-    private Boolean result;
-
     @FindBy(xpath = "//*[@class='bash']")
     private WebElement codeText;
 
@@ -23,30 +21,17 @@ public class PageTestResult extends AbstractPage {
         super(driver);
     }
 
-    public Boolean checkCodeText() {
-        checkResult(codeText.getText(), PageNavigator.getCodeFieldText());
-        return result;
+    public String checkCodeText() {
+        return codeText.getText();
     }
 
-    public Boolean checkSyntaxHighlight() {
-        checkResult(syntaxHighlight.getText(), PageNavigator.getSYNTAX());
-        return result;
+    public String checkSyntaxHighlight() {
+        return syntaxHighlight.getText();
     }
 
-    public Boolean checkTitle() {
-        checkResult(driver.findElement(By.tagName("h1")).getText(), PageNavigator.getTitleText());
-        return result;
+    public String checkTitle() {
+        return driver.findElement(By.tagName("h1")).getText();
     }
 
-    private void checkResult(String textOnPage, String textToCompare) {
-        result = textOnPage.equals(textToCompare);
-        if (result)
-            System.out.println(driver.toString() + ": test passed, the text '" + textToCompare + "' is present");
-        return;
-    }
 
-    @Override
-    protected AbstractPage openPage() {
-        return null;
-    }
 }

@@ -12,5 +12,4 @@ public abstract class AbstractPage {
         PageFactory.initElements(driver, this);
     }
 
-    protected abstract AbstractPage openPage();
 }

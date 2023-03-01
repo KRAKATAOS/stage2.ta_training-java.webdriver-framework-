@@ -10,23 +10,19 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import training.stage2.framework.model.TestingSet;
 import training.stage2.framework.util.CustomConditions;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 
-public class HomePageNavigator extends AbstractPage {
+public class GooglePageNavigation extends AbstractPage {
 
-    private static final String HOMEPAGE_URL = "https://cloud.google.com/";
-    private static final String SEARCH_REQUEST = "Google Cloud Platform Pricing Calculator";
-    private static final String EMAIL_GENERATOR_URL = "https://yopmail.com/ru/";
     private final Logger logger = LogManager.getRootLogger();
 
     String emailName;
     ArrayList<String> tabs;
-    String estimatedCost;
+    public static String estimatedCost;
 
     @FindBy(xpath = "//*[@class='devsite-search-field devsite-search-query']")
     private WebElement searchButton;
@@ -50,92 +46,62 @@ public class HomePageNavigator extends AbstractPage {
     private WebElement buttonSendEmail;
     @FindBy(xpath = "//*[@id='resultBlock']//h2/b")
     private WebElement costText;
-    // Fields for filling in data about the data center
-    @FindBy(xpath = "//*[@id='select_value_label_90']/span[1]")
-    private WebElement fieldOfDataCenter;
-    @FindBy(xpath = "//*[@id='select_option_230']")
-    private WebElement checkBoxOfDataCenter;
 
-    public HomePageNavigator(WebDriver driver) {
+
+    public GooglePageNavigation(WebDriver driver) {
         super(driver);
     }
 
-    public HomePageNavigator(WebDriver driver, String emailName, ArrayList<String> tabs) {
+    public GooglePageNavigation(WebDriver driver, String emailName, ArrayList<String> tabs) {
         super(driver);
         this.emailName = emailName;
         this.tabs = tabs;
     }
 
-    public HomePageNavigator openPage() {
+    public GooglePageNavigation openPage(String cloudGoogleUrl) {
         driver.manage().window().maximize();
-        driver.get(HOMEPAGE_URL);
+        driver.get(cloudGoogleUrl);
 
         new WebDriverWait(driver, 10).until(CustomConditions.pageLoadCompleted());
         logger.info("Home page opened");
+
         return this;
     }
 
-    public HomePageNavigator searchForElementAndClick() {
-
+    public GooglePageNavigation searchElementAndClick(String sendRequestInCloudGoogle) {
         new WebDriverWait(driver, 10).until(ExpectedConditions.visibilityOf(searchButton));
         searchButton.click();
-
-        searchButton.sendKeys(SEARCH_REQUEST);
+        searchButton.sendKeys(sendRequestInCloudGoogle);
         searchButton.sendKeys(Keys.RETURN);
 
-        new WebDriverWait(driver, 10).until(CustomConditions.pageLoadCompleted());
-
         new WebDriverWait(driver, 10).until(ExpectedConditions.visibilityOf(searchResultField));
-        searchResultField.findElement(By.linkText(SEARCH_REQUEST)).click();
+        searchResultField.findElement(By.linkText(sendRequestInCloudGoogle)).click();
 
         return this;
     }
 
-    public HomePageNavigator fillSiteForm(TestingSet testingSet) {
-
-        new WebDriverWait(driver, 10).until(CustomConditions.pageLoadCompleted());
+    public GooglePageNavigation changeTheFrameBeforeFillingInTheFields() {
 
         driver.switchTo().frame(driver.findElement(By.xpath("//*[@id='cloud-site']//iframe")));
         driver.switchTo().frame(driver.findElement(By.xpath("//iframe[@id='myFrame']")));
-
-        inputFieldHandling(inputFieldNumberOfInstances, testingSet.getFormNumberOfInstance());
-
-        spanOptionHandling("Operating System / Software", testingSet.getFormOsType());
-        spanOptionHandling("Provisioning model", testingSet.getFormClassType());
-        spanOptionHandling("Series", testingSet.getFormInstanceSeries());
-        spanOptionHandling("Machine type", testingSet.getFormInstanceType());
-
-        checkBoxHandling(checkBoxAddGPUs);
-
-        spanOptionHandling("GPU type", testingSet.getFormGpuType());
-        spanOptionHandling("Number of GPUs", testingSet.getFormGpuNumber());
-
-        scrollDownTillElementAppeared(localSSD);
-
-        spanOptionHandling("Local SSD", testingSet.getFormSsdCapacity());
-        if (testingSet.getFormLocation() == "Frankfurt (europe-west3)"){
-        fieldOfDataCenter(fieldOfDataCenter);
-        checkBoxOfDataCenter(checkBoxOfDataCenter);}
-
-        //spanOptionHandling("Datacenter location", testingSet.getFormLocation());
-        spanOptionHandling("Committed usage", testingSet.getFormUsage());
-
         return this;
     }
 
-    public EmailPageNavigator createRequest() {
+
+    public EmailPageNavigation createRequest(String emailGeneratorURL) {
         buttonAddToEstimate.click();
-        return new EmailPageNavigator(driver, EMAIL_GENERATOR_URL);
+        return new EmailPageNavigation(driver, emailGeneratorURL);
     }
 
-    public EmailPageNavigator sendEmail() {
+    public EmailPageNavigation sendEmail() {
 
         driver.switchTo().frame(driver.findElement(By.xpath("//*[@id='cloud-site']//iframe")));
         driver.switchTo().frame(driver.findElement(By.xpath("//iframe[@id='myFrame']")));
 
         new WebDriverWait(driver, 10).until(ExpectedConditions.visibilityOf(buttonEmailEstimate));
 
-        estimatedCost = getCost(costText.getText());
+        String[] getCostFromCloudGoogle = costText.getText().split(" ");
+        estimatedCost = getCostFromCloudGoogle[4];
 
         buttonEmailEstimate.click();
 
@@ -146,21 +112,18 @@ public class HomePageNavigator extends AbstractPage {
 
         driver.switchTo().window(tabs.get(1));
 
-        return new EmailPageNavigator(driver, estimatedCost, emailName);
+        return new EmailPageNavigation(driver, estimatedCost, emailName);
     }
 
-    private String getCost(String text) {
-        String[] fulltext = text.split(" ");
-        return fulltext[4];
+    public GooglePageNavigation clickTheAddGPUButton() {
+        new WebDriverWait(driver, 10).until(ExpectedConditions.visibilityOf(checkBoxAddGPUs));
+        checkBoxAddGPUs.click();
+
+        driver.manage().timeouts().implicitlyWait(200, TimeUnit.MILLISECONDS);
+        return this;
     }
 
-    private void checkBoxHandling(WebElement checkBoxField) {
-        new WebDriverWait(driver, 10).until(ExpectedConditions.visibilityOf(checkBoxField));
-        checkBoxField.click();
-        driver.manage().timeouts().implicitlyWait(100, TimeUnit.MILLISECONDS);
-    }
-
-    private void spanOptionHandling(String optionDescription, String textOption) {
+    public GooglePageNavigation spanOptionHandling (String optionDescription, String textOption) {
 
         new WebDriverWait(driver, 10).until(ExpectedConditions.presenceOfElementLocated(By.xpath("*//label[text()='" + optionDescription + "']/../md-select")));
         driver.findElement(By.xpath("*//label[text()='" + optionDescription + "']/../md-select")).click();
@@ -169,6 +132,19 @@ public class HomePageNavigator extends AbstractPage {
         driver.findElement(By.xpath("*//*[@class='md-select-menu-container md-active md-clickable']//.//*[contains(text(),'" + textOption + "')]")).click();
 
         driver.manage().timeouts().implicitlyWait(200, TimeUnit.MILLISECONDS);
+        return this;
+    }
+
+    public GooglePageNavigation spanOptionHandlingForDatacenter(String optionDescription, String textOption) {
+
+        new WebDriverWait(driver, 10).until(ExpectedConditions.presenceOfElementLocated(By.xpath("*//label[text()='" + optionDescription + "']/../md-select")));
+        driver.findElement(By.xpath("*//label[text()='" + optionDescription + "']/../md-select")).click();
+
+        new WebDriverWait(driver, 10).until(ExpectedConditions.presenceOfElementLocated(By.xpath("*//*[@class='md-select-menu-container cpc-region-select md-active md-clickable']//.//*[contains(text(),'" + textOption + "')]")));
+        driver.findElement(By.xpath("*//*[@class='md-select-menu-container cpc-region-select md-active md-clickable']//.//*[contains(text(),'" + textOption + "')]")).click();
+
+        driver.manage().timeouts().implicitlyWait(200, TimeUnit.MILLISECONDS);
+        return this;
     }
 
     private void scrollDownTillElementAppeared(WebElement optionDescription) {
@@ -177,23 +153,12 @@ public class HomePageNavigator extends AbstractPage {
         }
     }
 
-    private void inputFieldHandling(WebElement fieldXpath, String value) {
-        new WebDriverWait(driver, 10).until(ExpectedConditions.visibilityOf(fieldXpath));
-        fieldXpath.sendKeys(value);
+    public GooglePageNavigation inputFieldHandling(String handlingField) {
+        new WebDriverWait(driver, 10).until(ExpectedConditions.visibilityOf(inputFieldNumberOfInstances));
+        inputFieldNumberOfInstances.sendKeys(handlingField);
 
         driver.manage().timeouts().implicitlyWait(100, TimeUnit.MILLISECONDS);
-    }
-    private void fieldOfDataCenter(WebElement fieldXpath) {
-        new WebDriverWait(driver, 10).until(ExpectedConditions.visibilityOf(fieldXpath));
-        fieldXpath.click();
-
-        driver.manage().timeouts().implicitlyWait(100, TimeUnit.MILLISECONDS);
-    }
-    private void checkBoxOfDataCenter(WebElement fieldXpath) {
-        new WebDriverWait(driver, 10).until(ExpectedConditions.visibilityOf(fieldXpath));
-        fieldXpath.click();
-
-        driver.manage().timeouts().implicitlyWait(100, TimeUnit.MILLISECONDS);
+        return this;
     }
 
 }
